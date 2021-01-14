@@ -1,13 +1,17 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { unsplashImagesAction } from './slice';
 import { fetchImages } from '../../api';
 
-function* handleUnsplashImagesLoad() {
+function* handleUnsplashImagesLoad(action) {
+  const page = yield select((state) => state.images.page);
   const { loadSuccess, loadFail } = unsplashImagesAction;
 
   try {
-    const images = yield call(fetchImages);
-    yield put(loadSuccess(images));
+    const images = yield call(fetchImages, page);
+    console.log('fetch_images', images);
+    console.log('page', page);
+    console.log(loadSuccess);
+    yield put(loadSuccess({ images }));
   } catch (e) {
     yield put(loadFail(e));
   }
@@ -15,5 +19,5 @@ function* handleUnsplashImagesLoad() {
 
 export function* watchUnplashImages() {
   const { load } = unsplashImagesAction;
-  yield takeLatest(load, handleImageLoad);
+  yield takeLatest(load, handleUnsplashImagesLoad);
 }

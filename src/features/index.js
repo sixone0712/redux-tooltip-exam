@@ -1,24 +1,28 @@
 import { watchUnplashImages } from './imageGrid/saga';
 import { unsplashImagesReducer } from './imageGrid/slice';
-import { watchUnplashStats } from './stats/saga';
+import watchUnplashStatsRequest from './stats/saga';
 import { unsplashStatsReducer } from './stats/slice';
 import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import { all } from 'redux-saga/effects';
 
 const rootReducer = combineReducers({
   images: unsplashImagesReducer,
-  stats: unsplashStatsReducer,
+  // stats: unsplashStatsReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
 
 function* rootSaga() {
-  yield all([watchUnplashImages(), watchUnplashStats()]);
+  // yield all([watchUnplashImages(), watchUnplashStatsRequest()]);
+  yield all([watchUnplashImages()]);
 }
 
-const createStoreReduxTooltip = () => {
+const createStore = () => {
   const store = configureStore({
     reducer: rootReducer,
-    devTools: tree,
+    devTools: true,
     middleware: [sagaMiddleware],
   });
 
@@ -27,4 +31,4 @@ const createStoreReduxTooltip = () => {
   return store;
 };
 
-export default createStoreReduxTooltip;
+export default createStore;

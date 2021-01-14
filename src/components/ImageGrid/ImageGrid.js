@@ -5,17 +5,21 @@ import Button from '../Button';
 import Stats from '../Stats';
 import { loadImages } from '../../actions';
 import './styles.css';
-import { unsplashSelector } from '../../features/imageGrid/slice';
+import {
+  unsplashSelector,
+  unsplashImagesAction,
+} from '../../features/imageGrid/slice';
 
 export default function ImageGrid() {
+  // const dispatch = useDispatch();
+  // const { isLoading, images, error, imageStats } = useSelector(
+  //   (state) => state,
+  // );
+  const { isLoading, images, error, page } = useSelector(unsplashSelector.all);
   const dispatch = useDispatch();
-  const { isLoading, images, error, imageStats } = useSelector(
-    (state) => state,
-  );
-  // const { isLoading, images, error } = useSelector(unsplashSelector.all);
 
   useEffect(() => {
-    dispatch(loadImages());
+    dispatch(unsplashImagesAction.load({ page }));
   }, []);
 
   return (
@@ -26,14 +30,16 @@ export default function ImageGrid() {
             key={image.id}
             className={`item item-${Math.ceil(image.height / image.width)}`}
           >
-            <Stats stats={imageStats[image.id]} />
+            {/* <Stats stats={imageStats[image.id]} /> */}
             <img src={image.urls.small} alt={image.user.username} />
           </div>
         ))}
       </section>
       {error && <div className="error">{JSON.stringify(error)}</div>}
       <Button
-        onClick={() => !isLoading && dispatch(loadImages())}
+        onClick={() =>
+          !isLoading && dispatch(unsplashImagesAction.load({ page }))
+        }
         loading={isLoading}
       >
         Load More

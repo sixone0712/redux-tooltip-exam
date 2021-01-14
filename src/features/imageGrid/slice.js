@@ -1,18 +1,22 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  page: 1,
   isLoading: false,
   images: [],
   error: null,
 };
 
 const reducers = {
-  load: (state) => {
+  load: (state, { payload: { page } }) => {
+    console.log('reducers, load');
+    console.log('reducers, page', page);
     state.isLoading = true;
   },
-  loadSuccess: (state, { payload: images }) => {
+  loadSuccess: (state, { payload: { images } }) => {
     state.isLoading = false;
-    state.image.push(...images);
+    state.page++;
+    state.images.push(...images);
   },
   loadFail: (state, { payload: { error } }) => {
     state.isLoading = false;
@@ -30,8 +34,9 @@ const selectAllState = createSelector(
   (state) => state.isLoading,
   (state) => state.images,
   (state) => state.error,
-  (isLoading, images, error) => {
-    return { isLoading, images, error };
+  (state) => state.page,
+  (isLoading, images, error, page) => {
+    return { isLoading, images, error, page };
   },
 );
 

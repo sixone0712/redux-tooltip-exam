@@ -4,11 +4,11 @@ import { Provider } from 'react-redux';
 import Header from './components/Header';
 import ImageGrid from './components/ImageGrid';
 
-import configureStore from './store';
-const store = configureStore();
+// import configureStore from './store';
+// const store = configureStore();
 
-// import createStoreReduxTooltip from './features';
-// const store = configureStoreReduxToolTip;
+import createStore from './features';
+const store = createStore();
 
 function App() {
   return (
